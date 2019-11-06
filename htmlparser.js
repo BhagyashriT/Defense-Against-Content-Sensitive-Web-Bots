@@ -2,71 +2,127 @@
 const fs = require('fs');
 const request = require('request');
 const htmlparser2 = require('htmlparser2');
-const _ = require('lodash');
-const jsdom = require("jsdom");
-var _ = require('lodash');
-var cheerio = require('cheerio');
-
-//const { JSDOM } = jsdom;
-
-var html_str = fs.readFileSync('Y40_80.html', 'utf-8');
-//const dom = new JSDOM(html_str);
-//console.log(dom.window.document.querySelector("button").textContent); // "Hello world"
-// Transform input html page to DOM tree, the DOM tree is stored in handler.dom
-var handler = new htmlparser2.DomHandler();
-var HTMLparser = new htmlparser2.Parser(handler);
-HTMLparser.parseComplete(html_str); 
-//HTMLparser.end();
-
-
-//whenever an element is , randomize its class attribute.
-function walkDOM(dom) 
-{
-    for(i=0;i<dom.length;i++)
-    {
-        var a=dom[i].value;
-    function myfunc(a)
-    {
-
-        callchildren(value);
-        
-        function callchildren(node)
-        {
-
-            if(node.next.children !=null||node.children!=null)
+var path = require('path');
+var HashMap = require('hashmap');
+var map = new HashMap();
+var Class2 = "";
+var classes = [];
+            var html_str = fs.readFileSync('Y40_80.html', 'utf-8');
+            var handler = new htmlparser2.DomHandler();
+            var HTMLparser = new htmlparser2.Parser(handler);
+            HTMLparser.parseComplete(html_str); 
+            var keysarr=[];
+            var valuesarr=[];
+            //HTMLparser.end();
+           // console.log(handler.dom);
+            function walkDOM(dom)
             {
-                called(node.next);
-            }
-            else
-            {
-            callchildren(node.next);   
-            }
-        }
-        function called(node)
-        {
-            //function checkforclass();
-            for(i=0;i<node.length;i++)
-            {
-                if(node[i].value==='class')
-                {   
-                    console.log('class');
-                }
-             }
-
-            if(node1.children[2].name==='body')
-            for(node1=node1.children; node1!=null; node1= node1.nextSibling)
-            {
-                if(node.children[i].value.name==='body')
+                for(var index=0;index<dom.length;index++)
                 {
-
-                   if(Object.prototype.toString.call(node)=== 'class')
+                    if(dom[index].type==="tag")
                     {
-                    console.log(Object.prototype.toString.call(node));
+                        walkDOM2(dom[index]);
                     }
-            myfunc(node);
+                }
             }
-               }       }
-    }
-    }
-}
-walkDOM(handler.dom);
+            function walkDOM2(object)
+            {
+                        try
+                        {
+                          if(object.attribs.class)
+                          {
+                              classes = object.attribs.class.split(" ");
+                              
+                              for(var i=0;i<classes.length;i++)
+                              {
+                                  keysarr[i]=classes;
+                                  if(classes[i].length>0)
+                                  {
+                                    if(map.has(classes[i])==false)
+                                    {
+                                        var id = Math.floor((Math.random() * 10000) + 10);
+                                     //   console.log("Randomizing class now.");
+                                        map.set(classes[i],"rand-class-"+id);
+                                        valuesarr[i]="rand-class-"+id;
+                                        }
+                                    if(i>0)
+                                        Class2 = Class2 + " ";
+                                        Class2 = Class2 + map.get(classes[i]);
+         
+                                  }
+                              }
+                              object.attribs.class = Class2;
+                          }
+                          for(var i=0;i<object.children.length;i++)
+                          {
+                              if(object.children[i].type==="tag")
+                              {
+                                  walkDOM2(object.children[i]);
+                              }
+                          }
+                       
+                        }
+                        catch(e)
+                        {
+                            console.log("Error occured while running");
+                        }
+                    }
+
+
+            walkDOM(handler.dom);
+            console.log("Length is : "+keysarr.length);
+                       
+            var html = require('htmlparser-to-html');
+
+            // Transform DOM tree back to HTML
+            var randomized = html(handler.dom);
+            try 
+            {
+            fs.writeFileSync("./example.html", randomized);
+            console.log("This is done");
+            }
+            catch (err) 
+            {
+                console.log("Error occured while running");
+                
+            }
+
+
+
+//For css
+var css = require('css');
+
+fs.readdir('./Y40_80_files', 'utf8', findCssFiles);
+            function findCssFiles(err, files) 
+            {
+                if (files.length) 
+                {
+                    files.forEach(function (files) 
+                    {
+                         // only process '.css'
+                        if (path.extname(files) == '.css' )
+                        {
+                            fs.readFile('./Y40_80_files/' + files, 'utf8', function (err, data) 
+                            {
+                                if (err)
+                                    throw err;
+                                else 
+                                {
+                                   try 
+                                   {
+                                       console.log(files);
+                                        var obj=css.parse('body { font-size: 12px; }', files);  
+                                        css.stringify(obj, files);  
+                                        //walkDOMforcss(obj);        
+                                    } 
+                                    catch(e) 
+                                    {
+                                        console.log('Failed to parse', files);
+                                        throw e;
+                                    }
+                                }
+                           });
+                        }
+                    });
+                }
+            }
