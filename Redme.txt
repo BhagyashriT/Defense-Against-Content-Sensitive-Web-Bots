@@ -1,0 +1,4 @@
+The file htmlparser.js is able to randomize the class names in the html page and extract all the css files in the directory of 'Y40_80_files'.
+The output generated is stored in the same folder as the code with the name of 'example.html'. 
+The presentation that I presented in the class is also included into the zip folder. 
+Additionally the URL to my site is included as a URL in the file of 'config.py'.
