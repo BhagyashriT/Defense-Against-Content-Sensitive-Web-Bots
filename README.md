@@ -1,19 +1,16 @@
 # Defense-Against-Content-Sensitive-Web-Bots
 Defense Against Content-Sensitive Web Bots
 
-====================================================================
 ## (1) Configuration:
 
 In "config.py":<br/>
 * variable "useOriginal":<br/>
 -- Set value to 1: original version of the web page<br/>
 -- Otherwise: randomized version of the web page<br/>
-<br/>
 * variable "baseURL":<br/>
 -- The baseURL to the original and randomized versions<br/>
 Once set, page baseURL + "/lenovo/ori/Y40_80.html" should be accessiable<br/>
 
-====================================================================
 ## (2) How to run:
 
 (a) Set "baseURL" in "config.py" and make it point to the server<br/>
@@ -22,7 +19,6 @@ Once set, page baseURL + "/lenovo/ori/Y40_80.html" should be accessiable<br/>
 (d) Set "useOriginal = 0" in "config.py" to use the randomized web page<br/>
 (e) run "python ./lenovo_mod.py" again (please see the sample output below)<br/>
 
-====================================================================
 ## (3) Sample output:
 
 
